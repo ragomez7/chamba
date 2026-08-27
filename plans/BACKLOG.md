@@ -164,6 +164,13 @@ Encontrado dogfooding en **finalis**. El check "Git repo" corría `git rev-parse
 - **Service registry + drift detection** (roadmap original #6): mapear servicios/contratos entre repos y detectar drift.
 - **V2 del README**: búsqueda semántica del vault, MCP sampling, más bases de conocimiento.
 - **Landing + docs**: seguir actualizando fase por fase (regla del proyecto).
+- **Mermaid en los planes** (explorado 2026-08-08, bajo aporte) — a raíz del `artifact-diagramming`
+  de Anthropic. Idea: que el `planner` emita un `## Diagram` con un bloque ` ```mermaid ` (deps
+  entre repos / secuencia / grafo de subtasks) y que `chamba_review_plan` avise suave `missing-diagram`
+  en planes multi-repo. Renderiza portable (Obsidian donde guardamos los planes, GitHub, Artifacts) y
+  respeta los principios (cero LLM en chamba, editor-agnóstico). **Descartado por ahora:** poco valor
+  real vs. el ruido de otra sección en el plan. La feature de Artifacts en sí es Claude-only (SVG inline),
+  no aplica al core editor-agnóstico.
 
 ---
 
