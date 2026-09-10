@@ -38,7 +38,9 @@ El modelo de tu editor hace el razonamiento y llama a las tools de chamba. Eso s
   conserva las ramas para que vos las mergees a mano — nunca `--force`, nunca merge
   automático. Antes del fan-out, chamba reporta overlap de archivos, un preview de
   conflictos con `merge-tree`, y (opt-in) un `PORT` único por worktree para que dos
-  servidores de QA no bindéen `:3000`.
+  servidores de QA no bindéen `:3000`. `worktrees.baseBranch` acepta una sola rama
+  **o** un mapa por repo (`{ "web": "main", "api": "develop", "*": "main" }`) para que
+  cada repo forkee desde su propia rama de integración.
 - **Obsidian + memoria entre sesiones.** Trae contexto de tu vault, escribe resúmenes
   de vuelta, y persiste conocimiento como markdown plano. Las notas se agrupan por
   proyecto (por git remote) y cada carpeta mantiene un `INDEX.md` liviano, así el recall
@@ -257,6 +259,7 @@ corrés chamba en paralelo entre máquinas: sin techo de RAM de una sola, menos 
 - ✅ **1.3.0 — extras de OpenCode:** `@chamba/opencode-extras` instala los mismos slash commands + subagentes en OpenCode (traducidos a su formato) y registra el MCP
 - ✅ **1.4.0 — extras de Cursor:** `@chamba/cursor-extras` instala los mismos comandos + subagentes en Cursor (`.cursor/commands` + `.cursor/agents`, modelo de tu reparto) y registra el MCP
 - ✅ **1.5.0 — Paralelismo seguro 2.0:** status de worktrees + overlap, preview `merge-tree` (nunca mergea), waves, PORT opt-in
+- ✅ **1.6.0 — Rama base por repo:** `worktrees.baseBranch` acepta un mapa por repo para que cada repo forkee de su propia rama de integración (ej. `web`=main, `api`=develop)
 - 🔭 V2: búsqueda semántica del vault, MCP sampling, más bases de conocimiento
 
 Ver [`PLAN.md`](./PLAN.md) para el plan completo de fases.

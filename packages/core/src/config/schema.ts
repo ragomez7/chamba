@@ -48,7 +48,9 @@ export const worktreeConfigSchema = z
         message: 'branchPrefix must have no spaces and no ".."',
       })
       .optional(),
-    baseBranch: z.string().min(1).optional(),
+    baseBranch: z
+      .union([z.string().min(1), z.record(z.string().min(1), z.string().min(1))])
+      .optional(),
     copyEnvFiles: z.boolean().optional(),
     envPruneDirs: z.array(z.string()).optional(),
     editorWorkspace: z.enum(['code-workspace']).nullable().optional(),

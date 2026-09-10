@@ -166,17 +166,20 @@ export async function inspectRepos(input: {
   fs: FilesystemPort;
   cwd: string;
   repos?: string[];
-  baseBranch: string;
+  /** A single base branch for every repo, or a per-repo resolver by repo name. */
+  baseBranch: string | ((repo: string) => string);
 }): Promise<WorktreeInspection[]> {
   const names =
     input.repos && input.repos.length > 0 ? input.repos : await detectGitRepos(input.fs, input.cwd);
-  const roots =
+  const resolveBase = (repo: string): string =>
+    typeof input.baseBranch === 'function' ? input.baseBranch(repo) : input.baseBranch;
+  const targets: Array<{ root: string; repo: string }> =
     names.length > 0
-      ? names.map((n) => (n.startsWith('/') ? n : joinPath(input.cwd, n)))
-      : [input.cwd];
+      ? names.map((n) => ({ root: n.startsWith('/') ? n : joinPath(input.cwd, n), repo: n }))
+      : [{ root: input.cwd, repo: '*' }];
   const out: WorktreeInspection[] = [];
-  for (const root of roots) {
-    out.push(await input.inspector.inspect(root, { baseBranch: input.baseBranch }));
+  for (const t of targets) {
+    out.push(await input.inspector.inspect(t.root, { baseBranch: resolveBase(t.repo) }));
   }
   return out;
 }

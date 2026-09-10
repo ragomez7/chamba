@@ -1,4 +1,5 @@
 import {
+  baseBranchForRepo,
   extractSubtaskPaths,
   inspectRepos,
   joinPath,
@@ -57,7 +58,7 @@ export function registerPartition(server: McpServer, logger: Logger, services: S
           fs: services.fs,
           cwd: services.cwd,
           repos,
-          baseBranch: cfg.baseBranch,
+          baseBranch: (repo) => baseBranchForRepo(cfg, repo),
         });
         partitionItems = inspections.flatMap((ins) =>
           ins.worktrees

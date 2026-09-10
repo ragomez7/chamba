@@ -33,8 +33,13 @@ export interface WorktreeConfig {
   root: string;
   /** Branch prefix; the branch is `<branchPrefix><ticket>`, shared across repos. */
   branchPrefix: string;
-  /** Branch to fork from when the ticket branch doesn't exist yet. */
-  baseBranch: string;
+  /**
+   * Branch to fork from when the ticket branch doesn't exist yet. Either a
+   * single branch applied to every repo, or a per-repo map keyed by repo name
+   * with an optional `"*"` fallback, e.g.
+   * `{ "delivery-app": "main", "ms-delivery": "develop", "*": "main" }`.
+   */
+  baseBranch: string | Record<string, string>;
   /** Copy git-ignored `.env*` files into the new worktree (off by default). */
   copyEnvFiles: boolean;
   /** Directories pruned while scanning for `.env*` files. */
@@ -148,6 +153,17 @@ export function resolveWorktreeConfig(file?: PartialWorktreeConfig): WorktreeCon
       failOnOverlap: file.overlap?.failOnOverlap ?? d.overlap.failOnOverlap,
     },
   };
+}
+
+/**
+ * Resolve the base branch for a specific repo. A string config applies to every
+ * repo; a map is keyed by repo name, falling back to the `"*"` entry and then
+ * `"main"`. Passing `"*"` returns the map's global default (or `"main"`). Pure.
+ */
+export function baseBranchForRepo(config: WorktreeConfig, repo: string): string {
+  const b = config.baseBranch;
+  if (typeof b === 'string') return b;
+  return b[repo] ?? b['*'] ?? 'main';
 }
 
 function resolvePorts(file?: Partial<WorktreePortsConfig> | null): WorktreePortsConfig {

@@ -36,6 +36,7 @@ export type {
   WorktreePortsConfig,
 } from './config/worktrees.js';
 export {
+  baseBranchForRepo,
   DEFAULT_WORKTREE_CONFIG,
   DEFAULT_WORKTREE_OVERLAP,
   DEFAULT_WORKTREE_PORTS,

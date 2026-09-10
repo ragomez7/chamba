@@ -1,6 +1,7 @@
 import {
   applyOverlapCap,
   assignWorktreePorts,
+  baseBranchForRepo,
   buildTicketBranch,
   computeConcurrencyBudget,
   detectGitRepos,
@@ -108,7 +109,8 @@ export function registerCreateWorktrees(
       });
       const results = await new MultiRepoWorktreeManager(services.process, services.fs).create({
         items,
-        baseBranch: worktrees.baseBranch,
+        // Per-repo base lives on each plan item; this is only the fallback.
+        baseBranch: baseBranchForRepo(worktrees, '*'),
         copyEnvFiles: worktrees.copyEnvFiles,
         envPruneDirs: worktrees.envPruneDirs,
       });
@@ -134,7 +136,7 @@ export function registerCreateWorktrees(
         fs: services.fs,
         cwd: services.cwd,
         repos: repoList,
-        baseBranch: worktrees.baseBranch,
+        baseBranch: (repo) => baseBranchForRepo(worktrees, repo),
       });
       const overlapCount = inspections.reduce((n, i) => n + i.overlaps.length, 0);
       const maxWaveSize = Math.max(

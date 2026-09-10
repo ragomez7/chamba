@@ -1,5 +1,23 @@
 # @chamba/cursor-extras
 
+## 1.6.0
+
+### Minor Changes
+
+- Per-repo base branches. `worktrees.baseBranch` now accepts either a single branch
+  (applied to every repo, as before) or a per-repo map keyed by repo name with an
+  optional `"*"` fallback, e.g. `{ "delivery-app": "main", "ms-delivery": "develop", "*": "main" }`.
+
+  `create_worktrees` forks each repo from its own base, and `conflict_preview`,
+  `worktree_status`, `list_worktrees` and `partition` compare each repo against its
+  real base branch. Backward compatible (a string keeps working), no LLM.
+
+### Patch Changes
+
+- Updated dependencies
+  - @chamba/core@1.6.0
+  - @chamba/adapters@1.6.0
+
 ## 1.5.0
 
 ### Minor Changes

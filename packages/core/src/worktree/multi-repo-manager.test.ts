@@ -65,6 +65,26 @@ describe('MultiRepoWorktreeManager.create', () => {
     ).toBe(true);
   });
 
+  it('forks from the per-repo base branch on the plan item', async () => {
+    const proc = new FakeProcess(gitHandler({ local: false, remote: false }));
+    const perRepo = planWorktrees({
+      workspaceRoot: '/ws',
+      ticket: 'T-1',
+      repos: ['api'],
+      config: { ...config, baseBranch: { api: 'develop', '*': 'main' } },
+    });
+    const res = only(await create(proc, fs, { items: perRepo }));
+    expect(res.status).toBe('created');
+    expect(
+      proc.calls.some(
+        (c) =>
+          c.args.join(' ') === 'worktree add -b ticket/T-1 /ws/WORKTREES/T-1/api origin/develop',
+      ),
+    ).toBe(true);
+    // fetched the per-repo base, not the fallback
+    expect(proc.calls.some((c) => c.args.join(' ') === 'fetch origin develop')).toBe(true);
+  });
+
   it('reuses an existing local branch', async () => {
     const proc = new FakeProcess(gitHandler({ local: true }));
     const res = only(await create(proc, fs));

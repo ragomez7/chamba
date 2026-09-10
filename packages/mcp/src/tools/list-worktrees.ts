@@ -1,4 +1,11 @@
-import { inspectRepos, joinPath, loadConfig, WORKSPACE_DIR, WorktreeInspector } from '@chamba/core';
+import {
+  baseBranchForRepo,
+  inspectRepos,
+  joinPath,
+  loadConfig,
+  WORKSPACE_DIR,
+  WorktreeInspector,
+} from '@chamba/core';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { Logger } from 'pino';
 import type { Services } from '../services.js';
@@ -25,7 +32,7 @@ export function registerListWorktrees(server: McpServer, logger: Logger, service
         inspector,
         fs: services.fs,
         cwd: services.cwd,
-        baseBranch: cfg.baseBranch,
+        baseBranch: (repo) => baseBranchForRepo(cfg, repo),
       });
       const worktrees = inspections.flatMap((i) => i.worktrees);
       const overlaps = inspections.flatMap((i) => i.overlaps);

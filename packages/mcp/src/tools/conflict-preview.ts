@@ -1,4 +1,6 @@
 import {
+  baseBranchForRepo,
+  basename,
   ConflictPreviewer,
   joinPath,
   loadConfig,
@@ -42,7 +44,8 @@ export function registerConflictPreview(
         globalPath: joinPath(services.homedir, CONFIG_FILE),
         projectPath: joinPath(services.cwd, CONFIG_FILE),
       });
-      const base = baseBranch ?? cfg.baseBranch;
+      // Single repo (cwd): resolve its base by the repo's folder name.
+      const base = baseBranch ?? baseBranchForRepo(cfg, basename(services.cwd));
       let topics = branches ?? [];
       if (topics.length === 0) {
         const listed = await new WorktreeManager(services.process).list(services.cwd);

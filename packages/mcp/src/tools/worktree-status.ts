@@ -1,4 +1,11 @@
-import { inspectRepos, joinPath, loadConfig, WORKSPACE_DIR, WorktreeInspector } from '@chamba/core';
+import {
+  baseBranchForRepo,
+  inspectRepos,
+  joinPath,
+  loadConfig,
+  WORKSPACE_DIR,
+  WorktreeInspector,
+} from '@chamba/core';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { Logger } from 'pino';
 import { z } from 'zod';
@@ -39,7 +46,8 @@ export function registerWorktreeStatus(
         globalPath: joinPath(services.homedir, CONFIG_FILE),
         projectPath: joinPath(services.cwd, CONFIG_FILE),
       });
-      const base = baseBranch ?? cfg.baseBranch;
+      // An explicit param applies to every repo; otherwise resolve per-repo.
+      const base = baseBranch ?? ((repo: string) => baseBranchForRepo(cfg, repo));
       const inspector = new WorktreeInspector(services.process, services.clock);
       const inspections = await inspectRepos({
         inspector,

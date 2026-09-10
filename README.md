@@ -40,7 +40,9 @@ chamba (the tool) handles the supervising, validating and plumbing around it.
 - **Safe parallelism.** Git worktrees isolate parallel work; cleanup keeps branches
   for you to merge by hand — never `--force`, never auto-merge. Before fan-out, chamba
   reports file overlap, a `merge-tree` conflict preview, and (opt-in) a unique `PORT`
-  per worktree so two QA servers do not bind `:3000`.
+  per worktree so two QA servers do not bind `:3000`. `worktrees.baseBranch` takes a
+  single branch **or** a per-repo map (`{ "web": "main", "api": "develop", "*": "main" }`)
+  so each repo forks from its own integration branch.
 - **Obsidian + cross-session memory.** Pull context from your vault, write summaries
   back, and persist knowledge as plain markdown. Notes are grouped per project (by git
   remote) and each folder keeps a lightweight `INDEX.md`, so recall scans a cheap index
@@ -281,6 +283,7 @@ no single-machine RAM ceiling, less waiting. **Guide:
 - ✅ **1.3.0 — OpenCode extras:** `@chamba/opencode-extras` installs the same slash commands + subagents into OpenCode (translated to its format) and registers the MCP server
 - ✅ **1.4.0 — Cursor extras:** `@chamba/cursor-extras` installs the same commands + subagents into Cursor (`.cursor/commands` + `.cursor/agents`, model from your reparto) and registers the MCP server
 - ✅ **1.5.0 — Safe parallelism 2.0:** worktree status + file overlap, `merge-tree` conflict preview (never merges), partition waves, opt-in per-worktree PORT
+- ✅ **1.6.0 — Per-repo base branches:** `worktrees.baseBranch` accepts a per-repo map so each repo forks from its own integration branch (e.g. `web`=main, `api`=develop)
 - 🔭 V2: semantic vault search, MCP sampling, more knowledge bases
 
 See [`PLAN.md`](./PLAN.md) for the full phase plan.
