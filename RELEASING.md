@@ -73,12 +73,25 @@ check fails (warnings are allowed).
    gh release create '@chamba/mcp@x.y.z' --repo thelord07/chamba \
      --title '@chamba/mcp@x.y.z — <headline>' --notes '<what changed>'
    ```
-10. **Verify**: `npm view @chamba/mcp version`, the landing VERSION, and the README all read
-    the new version.
+10. **Verify every package, not just mcp.** `pnpm changeset publish` can print
+    "packages published successfully" but **silently skip one** (seen with `adapters`,
+    `opencode-extras`, `cursor-extras`). Check each of the 6 by **exact version**, then
+    re-run the idempotent publish to catch a miss:
+    ```bash
+    for p in core adapters mcp claude-extras opencode-extras cursor-extras; do
+      echo "$p → $(npm view @chamba/$p@x.y.z version)"
+    done
+    pnpm changeset publish   # idempotent: "already published" for the ones that made it
+    ```
+    An empty result can be read-side lag (~10–60s) OR a real miss — the re-run tells them
+    apart. Only trust "all 6 at x.y.z" once every exact-version query returns the version.
+    Then confirm the landing VERSION and the README read the new version.
 
 ## Gotchas
 
-- **Lockstep.** Any package bump bumps all four. Don't hand-edit one `package.json` version.
+- **Lockstep.** Any package bump bumps all six. Don't hand-edit one `package.json` version.
+- **Publish can silently skip a package.** The success line is optimistic — always verify
+  each of the 6 by exact version and re-run the idempotent `changeset publish` (see step 10).
 - **VS Code MCP config uses `"servers"`, not `"mcpServers"`.** Keep every editor guide correct.
 - **Never `console.log` in `@chamba/mcp`.** stdout is the MCP channel; logs go to
   `~/.chamba/logs/mcp-<pid>.log` via pino. A stray write corrupts the protocol.
