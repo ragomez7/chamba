@@ -34,3 +34,4 @@ primitive — adapt to what you have.
    **waves** of `recommended` — don't launch every worker at once on a small machine.
 7. When done, call `chamba_summarize_to_vault` with a summary of what changed.
 8. Leave any worktree branches open — do not merge. Tell me the merge command.
+   After the review request exists, `/babysit` triages comments, conflicts and CI.
