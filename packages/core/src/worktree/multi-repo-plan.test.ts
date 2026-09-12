@@ -59,6 +59,17 @@ describe('planWorktrees', () => {
       worktreePath: '/ws/WORKTREES/TICKET-9/api',
     });
   });
+
+  it('stamps a per-repo base branch on each item', () => {
+    const items = planWorktrees({
+      workspaceRoot: '/ws',
+      ticket: 'T-1',
+      repos: ['api', 'web'],
+      config: { ...sibling, baseBranch: { api: 'develop', web: 'main' } },
+    });
+    expect(items.find((i) => i.repo === 'api')?.baseBranch).toBe('develop');
+    expect(items.find((i) => i.repo === 'web')?.baseBranch).toBe('main');
+  });
 });
 
 describe('editorWorkspaceContent', () => {

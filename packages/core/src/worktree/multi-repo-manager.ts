@@ -68,7 +68,8 @@ export class MultiRepoWorktreeManager {
       return { ...base, status: 'skipped-exists', envCopied: 0 };
     }
 
-    const status = await this.addWorktree(item, input.baseBranch);
+    // Per-repo base branch (from the plan) wins; the input base is the fallback.
+    const status = await this.addWorktree(item, item.baseBranch ?? input.baseBranch);
 
     let envCopied = 0;
     if (input.copyEnvFiles) {

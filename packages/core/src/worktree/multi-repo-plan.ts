@@ -1,4 +1,4 @@
-import type { WorktreeConfig } from '../config/worktrees.js';
+import { baseBranchForRepo, type WorktreeConfig } from '../config/worktrees.js';
 import { joinPath } from '../util/path.js';
 
 export interface WorktreePlanItem {
@@ -10,6 +10,8 @@ export interface WorktreePlanItem {
   worktreePath: string;
   /** The ticket branch (shared across repos). */
   branch: string;
+  /** Base branch to fork from for this repo (resolved per-repo from config). */
+  baseBranch?: string;
 }
 
 export interface PlanWorktreesInput {
@@ -73,6 +75,7 @@ export function planWorktrees(input: PlanWorktreesInput): WorktreePlanItem[] {
     repoPath: joinPath(workspaceRoot, repo),
     worktreePath: worktreePathFor(config, workspaceRoot, ticket, repo),
     branch,
+    baseBranch: baseBranchForRepo(config, repo),
   }));
 }
 

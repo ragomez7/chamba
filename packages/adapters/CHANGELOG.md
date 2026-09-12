@@ -1,5 +1,33 @@
 # @chamba/adapters
 
+## 1.6.0
+
+### Minor Changes
+
+- Per-repo base branches. `worktrees.baseBranch` now accepts either a single branch
+  (applied to every repo, as before) or a per-repo map keyed by repo name with an
+  optional `"*"` fallback, e.g. `{ "delivery-app": "main", "ms-delivery": "develop", "*": "main" }`.
+
+  `create_worktrees` forks each repo from its own base, and `conflict_preview`,
+  `worktree_status`, `list_worktrees` and `partition` compare each repo against its
+  real base branch. Backward compatible (a string keeps working), no LLM.
+
+### Patch Changes
+
+- Updated dependencies
+  - @chamba/core@1.6.0
+
+## 1.5.0
+
+### Minor Changes
+
+- 70f3cce: Safe parallelism 2.0: worktree status + file overlap, merge-tree conflict preview (never merges), partition waves, and opt-in per-worktree PORT in `.env.local`.
+
+### Patch Changes
+
+- Updated dependencies [70f3cce]
+  - @chamba/core@1.5.0
+
 ## 1.4.0
 
 ### Patch Changes

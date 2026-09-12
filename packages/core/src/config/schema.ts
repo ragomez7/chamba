@@ -48,7 +48,9 @@ export const worktreeConfigSchema = z
         message: 'branchPrefix must have no spaces and no ".."',
       })
       .optional(),
-    baseBranch: z.string().min(1).optional(),
+    baseBranch: z
+      .union([z.string().min(1), z.record(z.string().min(1), z.string().min(1))])
+      .optional(),
     copyEnvFiles: z.boolean().optional(),
     envPruneDirs: z.array(z.string()).optional(),
     editorWorkspace: z.enum(['code-workspace']).nullable().optional(),
@@ -56,6 +58,21 @@ export const worktreeConfigSchema = z
     command: z.string().nullable().optional(),
     maxParallel: z.number().int().positive().nullable().optional(),
     perWorkerMemMB: z.number().int().positive().nullable().optional(),
+    ports: z
+      .object({
+        enabled: z.boolean().optional(),
+        base: z.number().int().min(1).max(65535).optional(),
+        step: z.number().int().positive().max(10000).optional(),
+        envKey: z
+          .string()
+          .min(1)
+          .regex(/^[A-Za-z_][A-Za-z0-9_]*$/, 'envKey must be a valid env var name')
+          .optional(),
+      })
+      .strict()
+      .nullable()
+      .optional(),
+    overlap: z.object({ failOnOverlap: z.boolean().optional() }).strict().optional(),
   })
   .strict();
 
